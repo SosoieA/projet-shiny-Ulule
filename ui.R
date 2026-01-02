@@ -14,27 +14,76 @@ ui <- fluidPage(
   
   # ================= STYLE CSS =================
   tags$style(HTML("
-    body { background-color: #f6f8fb; }
+  body { background-color: #f6f8fb; }
 
-    .stat-box {
-      border-radius: 16px;
-      padding: 15px;
-      text-align: center;
-      margin-bottom: 10px;
-      color: #1f2933;
-    }
+  /* Layout général */
+  .container-fluid { max-width: 1200px; }
 
-    .stat-title {
-      font-weight: bold;
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
+  /* Sidebar */
+  .well {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  }
 
-    .stat-line {
-      font-size: 15px;
-      margin: 2px 0;
-    }
-  ")),
+  /* Boutons */
+  .btn {
+    border-radius: 12px;
+    font-weight: 600;
+  }
+  .btn-default { border: 1px solid #d1d5db; }
+  .btn-primary {
+    background: #2563eb;
+    border-color: #2563eb;
+  }
+
+  /* Onglets */
+  .nav-tabs > li > a {
+    border-radius: 12px 12px 0 0;
+    font-weight: 600;
+  }
+
+  /* Cartes stats */
+  .stat-box {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 14px 16px;
+    text-align: left;
+    margin-bottom: 12px;
+    box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  }
+  .stat-title {
+    font-weight: 800;
+    font-size: 14px;
+    color: #111827;
+    margin-bottom: 6px;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+  }
+  .stat-line {
+    font-size: 14px;
+    margin: 2px 0;
+    color: #374151;
+  }
+
+  /* Titres */
+  h2 { font-weight: 800; color: #111827; }
+
+  /* Graph + tableau containers */
+  .tab-content {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  }
+
+  /* DataTable */
+  table.dataTable { border-radius: 12px; overflow: hidden; }
+")),
+  
   
   # ================= NAVIGATION =================
   navbarPage(
@@ -118,6 +167,51 @@ ui <- fluidPage(
           ),
           br(),
           uiOutput("stats_ui")
+        )
+      )
+    ),
+    
+    
+    # ================= AIDE =================
+    tabPanel(
+      "Aide",
+      fluidRow(
+        column(
+          12,
+          h2("Mode d’emploi"),
+          tags$div(
+            style = "background:#fff; border:1px solid #e5e7eb; border-radius:16px; padding:16px; box-shadow:0 6px 18px rgba(16,24,40,0.06);",
+            
+            h4("1) Choisir un indicateur"),
+            tags$ul(
+              tags$li("Nombre de campagnes : volume total de campagnes lancées."),
+              tags$li("Campagnes réussies : campagnes ayant atteint leur objectif."),
+              tags$li("Montant moyen (€) : moyenne des montants récoltés (en euros)."),
+              tags$li("Taux de réussite (%) : part des campagnes réussies.")
+            ),
+            
+            h4("2) Choisir l’affichage"),
+            tags$ul(
+              tags$li("Catégories séparées : une courbe par catégorie."),
+              tags$li("Catégories regroupées : une courbe globale.")
+            ),
+            
+            h4("3) Filtrer et afficher"),
+            tags$ul(
+              tags$li("Sélectionne une ou plusieurs catégories."),
+              tags$li("Choisis la période avec le curseur."),
+              tags$li(strong("Clique sur “Appliquer” pour mettre à jour le graphique et le tableau."))
+            ),
+            
+            h4("4) Explorer le tableau"),
+            tags$ul(
+              tags$li("Clique sur un lien pour ouvrir la campagne Ulule."),
+              tags$li("Utilise la barre de recherche du tableau pour filtrer rapidement.")
+            ),
+            
+            h4("5) Télécharger les données"),
+            tags$p("Le bouton “Télécharger” exporte les données filtrées au format CSV.")
+          )
         )
       )
     )

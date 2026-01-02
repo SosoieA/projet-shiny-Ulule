@@ -16,14 +16,20 @@ function(input, output, session) {
   # ================= CATÉGORIES =================
   output$categorie_ui <- renderUI({
     cats <- sort(unique(data_ulule$category))
-    selectInput(
+    
+    selectizeInput(
       "choix_categorie",
       "Catégories :",
       choices = cats,
-      selected = cats,     # par défaut : tout sélectionné
-      multiple = TRUE
+      selected = cats,      # tout sélectionné par défaut
+      multiple = TRUE,
+      options = list(
+        plugins = list("remove_button"),
+        placeholder = "Choisis une ou plusieurs catégories"
+      )
     )
   })
+  
   
   # ================= FILTRAGE =================
   perimetre <- eventReactive(input$go, {
