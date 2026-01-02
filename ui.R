@@ -1,28 +1,21 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    https://shiny.posit.co/
-#
+# ui.R
 
-# Chargement des librairies nécessaires
-library(shiny)     
-library(shinythemes) 
-library(DT)         
-library(plotly)      
 
-# Définition de l'interface utilisateur
-fluidPage(
+
+library(shiny)
+library(shinythemes)
+library(DT)
+library(plotly)
+library(lubridate)
+
+ui <- fluidPage(
   
-  theme = shinytheme("flatly"),  # Choix du thème
+  theme = shinytheme("flatly"),
   
   # ================= STYLE CSS =================
-  # Personnalisation de l'apparence
   tags$style(HTML("
     body { background-color: #f6f8fb; }
-    
+
     .stat-box {
       border-radius: 16px;
       padding: 15px;
@@ -30,13 +23,13 @@ fluidPage(
       margin-bottom: 10px;
       color: #1f2933;
     }
-    
+
     .stat-title {
       font-weight: bold;
       font-size: 18px;
       margin-bottom: 8px;
     }
-    
+
     .stat-line {
       font-size: 15px;
       margin: 2px 0;
@@ -53,19 +46,22 @@ fluidPage(
       fluidRow(
         column(
           4,
-          img(src = "ulule_logo.png", height = "200px") # Logo Ulule
+          div(
+            align = "center",
+            img(src = "ulule_logo.png", height = "200px")
+          )
         ),
         column(
           8,
-          h2("Analyse des campagnes Ulule"),           # Titre
-          p("Application interactive de suivi des campagnes de financement participatif."), # Description
+          h2("Analyse des campagnes Ulule"),
+          p("Application interactive de suivi des campagnes de financement participatif."),
           tags$ul(
             tags$li("Analyse temporelle par trimestre"),
             tags$li("Comparaison par catégories"),
             tags$li("Indicateurs financiers et de réussite")
           ),
           br(),
-          p(strong("Fait par Constance MOREL et Solène AMIOT")) # Auteurs
+          p(strong("Fait par Constance MOREL et Solène AMIOT"))
         )
       )
     ),
@@ -75,34 +71,31 @@ fluidPage(
       "Analyse",
       sidebarLayout(
         
-        # -------- SIDEBAR --------
         sidebarPanel(
-          # Choix de l'indicateur à afficher
           selectInput(
             "choix_indicateur",
             "Indicateur :",
             choices = c(
               "Nombre de campagnes" = "nb_campagnes",
               "Campagnes réussies" = "nb_reussies",
-              "Montant total (€)" = "montant_total",
+              "Montant moyen (€)" = "montant_total",
               "Taux de réussite (%)" = "ratio_financees"
-            )
+            ),
+            selected = "nb_campagnes"
           ),
           
-          # Type d'affichage du graphe (séparé ou regroupé)
           radioButtons(
             "regroupement",
             "Affichage du graphe :",
             choices = c(
               "Catégories séparées" = "sep",
               "Catégories regroupées" = "grp"
-            )
+            ),
+            selected = "sep"
           ),
           
-          # Menu dynamique des catégories (généré côté serveur)
           uiOutput("categorie_ui"),
           
-          # Choix de la période
           sliderInput(
             "annee_slider",
             "Période :",
@@ -112,32 +105,18 @@ fluidPage(
             sep = ""
           ),
           
-          # Bouton pour appliquer les filtres
           actionButton("go", "Appliquer"),
           br(), br(),
           
-          # Bouton de téléchargement des données
           downloadButton("download_data", "Télécharger")
         ),
         
-        # -------- MAIN PANEL --------
         mainPanel(
           tabsetPanel(
-            
-            # Onglet Graphique
-            tabPanel(
-              "Graphique",
-              plotlyOutput("plot_evolution") # Graphique interactif
-            ),
-            
-            # Onglet Tableau
-            tabPanel(
-              "Tableau",
-              DTOutput("table_evolution")    # Tableau interactif
-            )
+            tabPanel("Graphique", plotlyOutput("plot_evolution")),
+            tabPanel("Tableau", DTOutput("table_evolution"))
           ),
           br(),
-          # Affichage des statistiques
           uiOutput("stats_ui")
         )
       )
